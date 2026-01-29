@@ -9,6 +9,8 @@ import Interface from './components/Interface';
  * 
  * State Management:
  * - cameraMode: 'orbit' | 'walk'
+ * - activeTheme: 'modern' | 'classic' | 'minimal'
+ * - playerState: { position, rotation } for walk mode
  * 
  * Architecture:
  * - Scene: Contains 3D house structure with Bounds for auto-centering
@@ -17,6 +19,8 @@ import Interface from './components/Interface';
  */
 function App() {
   const [cameraMode, setCameraMode] = useState('orbit');
+  const [activeTheme, setActiveTheme] = useState('modern');
+  const [playerState, setPlayerState] = useState(null);
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -28,14 +32,16 @@ function App() {
         }}
         gl={{ antialias: true }}
       >
-        <Scene />
-        <Controls mode={cameraMode} />
+        <Scene mode={cameraMode} theme={activeTheme} playerState={playerState} />
+        <Controls mode={cameraMode} onPlayerStateChange={setPlayerState} />
       </Canvas>
 
       {/* UI Overlay */}
       <Interface
         cameraMode={cameraMode}
         onCameraModeChange={setCameraMode}
+        activeTheme={activeTheme}
+        onThemeChange={setActiveTheme}
       />
     </div>
   );

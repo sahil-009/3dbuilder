@@ -1,10 +1,10 @@
 import React from 'react';
 
 /**
- * Interface Component - UI buttons for camera mode switching
+ * Interface Component - UI buttons for camera mode switching and theme selection
  * Clean, simple buttons with clear labels
  */
-export default function Interface({ cameraMode, onCameraModeChange }) {
+export default function Interface({ cameraMode, onCameraModeChange, activeTheme, onThemeChange }) {
     const buttonStyle = {
         padding: '10px 20px',
         margin: '5px',
@@ -54,6 +54,29 @@ export default function Interface({ cameraMode, onCameraModeChange }) {
                 </button>
             </div>
 
+            {/* Theme Selection Buttons */}
+            <div style={{ background: 'rgba(255,255,255,0.9)', padding: '10px', borderRadius: '8px' }}>
+                <div style={{ marginBottom: '8px', fontWeight: 'bold', fontSize: '14px' }}>Design Theme</div>
+                <button
+                    style={activeTheme === 'modern' ? activeButtonStyle : inactiveButtonStyle}
+                    onClick={() => onThemeChange('modern')}
+                >
+                    Modern
+                </button>
+                <button
+                    style={activeTheme === 'classic' ? activeButtonStyle : inactiveButtonStyle}
+                    onClick={() => onThemeChange('classic')}
+                >
+                    Classic
+                </button>
+                <button
+                    style={activeTheme === 'minimal' ? activeButtonStyle : inactiveButtonStyle}
+                    onClick={() => onThemeChange('minimal')}
+                >
+                    Minimal
+                </button>
+            </div>
+
             {/* Instructions for walk mode */}
             {cameraMode === 'walk' && (
                 <div style={{
@@ -64,8 +87,8 @@ export default function Interface({ cameraMode, onCameraModeChange }) {
                     fontSize: '12px',
                 }}>
                     <div>WASD: Move</div>
-                    <div>Mouse: Look around</div>
-                    <div>ESC: Exit walk mode</div>
+                    <div>Mouse Drag: Rotate</div>
+                    <div>Third-person view</div>
                 </div>
             )}
         </div>
