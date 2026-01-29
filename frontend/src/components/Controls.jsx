@@ -67,7 +67,9 @@ export default function Controls({ mode, onPlayerStateChange }) {
         forward: false,
         backward: false,
         left: false,
-        right: false
+        right: false,
+        up: false,
+        down: false
     });
 
     // Mouse rotation state
@@ -125,6 +127,8 @@ export default function Controls({ mode, onPlayerStateChange }) {
                 case 'KeyS': moveState.current.backward = true; break;
                 case 'KeyA': moveState.current.left = true; break;
                 case 'KeyD': moveState.current.right = true; break;
+                case 'KeyQ': moveState.current.up = true; break;
+                case 'KeyE': moveState.current.down = true; break;
             }
         };
 
@@ -134,6 +138,8 @@ export default function Controls({ mode, onPlayerStateChange }) {
                 case 'KeyS': moveState.current.backward = false; break;
                 case 'KeyA': moveState.current.left = false; break;
                 case 'KeyD': moveState.current.right = false; break;
+                case 'KeyQ': moveState.current.up = false; break;
+                case 'KeyE': moveState.current.down = false; break;
             }
         };
 
@@ -186,27 +192,31 @@ export default function Controls({ mode, onPlayerStateChange }) {
     // Movement and camera update loop
     useFrame((state, delta) => {
         if (mode === 'walk') {
-            const { forward, backward, left, right } = moveState.current;
+            const { forward, backward, left, right, up, down } = moveState.current;
 
             // Movement
-            if (forward || backward || left || right) {
+            if (forward || backward || left || right || up || down) {
                 const moveVector = new THREE.Vector3();
 
                 // Forward/backward movement (FIXED: W forward, S backward)
                 const forwardAmount = (backward ? 1 : 0) - (forward ? 1 : 0);
                 const sideAmount = (right ? 1 : 0) - (left ? 1 : 0);
+                const verticalAmount = (up ? 1 : 0) - (down ? 1 : 0);
 
                 // Calculate movement in player's local space
                 moveVector.x = Math.sin(playerRotation.current) * forwardAmount +
                     Math.cos(playerRotation.current) * sideAmount;
                 moveVector.z = Math.cos(playerRotation.current) * forwardAmount -
                     Math.sin(playerRotation.current) * sideAmount;
+                moveVector.y = verticalAmount;
 
                 moveVector.normalize().multiplyScalar(MOVE_SPEED * delta);
 
                 // Calculate next position
                 const nextPosition = playerPosition.current.clone().add(moveVector);
-                nextPosition.y = FLOOR_Y; // Lock to floor
+
+                // Clamp height (Fly Mode logic) - min: floor, max: 10m high
+                nextPosition.y = Math.max(FLOOR_Y, Math.min(10.0, nextPosition.y));
 
                 // Check collision
                 if (!checkWallCollision(nextPosition, PLAYER_RADIUS)) {

@@ -86,9 +86,11 @@ export default function Interface({ cameraMode, onCameraModeChange, activeTheme,
                     borderRadius: '8px',
                     fontSize: '12px',
                 }}>
-                    <div>WASD: Move</div>
-                    <div>Mouse Drag: Rotate</div>
-                    <div>Third-person view</div>
+                    <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>Keyboard Controls</div>
+                    <div style={{ fontSize: '11px', marginBottom: '5px' }}>(Click screen if controls don't respond)</div>
+                    <div>W/A/S/D: Move</div>
+                    <div>Q: Fly Up | E: Fly Down</div>
+                    <div>Mouse Drag: Look Around</div>
                 </div>
             )}
         </div>
